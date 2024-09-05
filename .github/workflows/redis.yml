@@ -26,9 +26,7 @@ jobs:
             nocows = false
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
-          options: |
+          options: 
             --ssh-extra-args "-o StrictHostKeyChecking=no"
-          # Optional, literal inventory file contents
           inventory: |
-            54.204.241.153
-         
+            54.204.241.153 ansible_user=ubuntu
