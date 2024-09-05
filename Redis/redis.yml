@@ -1,0 +1,26 @@
+---
+- name: Install Redis Stack Server using Docker
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure Docker is installed (optional, if the previous playbook is not guaranteed to have been run)
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Pull Redis Stack Docker image
+      docker_image:
+        name: redis/redis-stack
+        tag: latest
+        source: pull
+
+    - name: Run Redis Stack container
+      docker_container:
+        name: redis-stack
+        image: redis/redis-stack:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "6379:6379"
+          - "8001:8001"
