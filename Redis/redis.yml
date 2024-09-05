@@ -8,11 +8,7 @@
     docker_password: "{{ lookup('env', 'docker_password') }}"
 
   tasks:
-    - name: Ensure Docker is installed
-      apt:
-        name: docker-ce
-        state: present
-
+  
     - name: Docker login (if using private registry)
       docker_login:
         username: "{{ docker_username }}"
