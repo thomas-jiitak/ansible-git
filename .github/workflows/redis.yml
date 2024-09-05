@@ -26,6 +26,9 @@ jobs:
             nocows = false
           # Optional, SSH private key
           key: ${{secrets.SSH_PRIVATE_KEY}}
+          options: |
+            --user ssh_user
+            --ssh-extra-args "-o StrictHostKeyChecking=no"
           # Optional, literal inventory file contents
           inventory: |
             54.204.241.153
