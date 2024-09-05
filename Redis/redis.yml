@@ -7,28 +7,27 @@
 
     - name: Pull Redis Stack Docker image
       docker_image:
-        name: redis/redis-stack
+        name: rental
         tag: latest
         source: pull
 
     - name: Stop existing Redis Stack container (if running)
       docker_container:
-        name: redis-stack
+        name: rental
         state: stopped
       ignore_errors: yes
 
     - name: Remove existing Redis Stack container (if exists)
       docker_container:
-        name: redis-stack
+        name: rental
         state: absent
       ignore_errors: yes
 
     - name: Run Redis Stack container
       docker_container:
-        name: redis-stack
-        image: redis/redis-stack:latest
+        name: rental
+        image: jiitakinc/rental-anshin-kun:latest
         state: started
         restart_policy: always
         ports:
-          - "6379:6379"
-          - "8001:8001"
+          - 3000
