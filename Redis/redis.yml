@@ -1,33 +1,34 @@
 ---
-- name: Install Redis Stack Server using Docker
+- name: Install and run Rental Anshin Kun using Docker
   hosts: all
   become: yes
 
   tasks:
-
-    - name: Pull Redis Stack Docker image
+  
+    - name: Pull Rental Anshin Kun Docker image
       docker_image:
-        name: rental
+        name: jiitakinc/rental-anshin-kun
         tag: latest
         source: pull
 
-    - name: Stop existing Redis Stack container (if running)
+    - name: Stop existing Rental Anshin Kun container (if running)
       docker_container:
-        name: rental
+        name: rental-anshin-kun
         state: stopped
       ignore_errors: yes
 
-    - name: Remove existing Redis Stack container (if exists)
+    - name: Remove existing Rental Anshin Kun container (if exists)
       docker_container:
-        name: rental
+        name: rental-anshin-kun
         state: absent
       ignore_errors: yes
 
-    - name: Run Redis Stack container
+    - name: Run Rental Anshin Kun container
       docker_container:
-        name: rental
+        name: rental-anshin-kun
         image: jiitakinc/rental-anshin-kun:latest
         state: started
         restart_policy: always
         ports:
-          - 3000
+          - "6379:6379"
+          - "8001:8001"
