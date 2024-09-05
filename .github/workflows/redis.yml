@@ -11,22 +11,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run playbook
-        uses: dawidd6/action-ansible-playbook@v2
+      - name: "Install Ansible"
+        uses: alex-oleshkevich/setup-ansible@VERSION 
         with:
-          # Required, playbook filepath
-          playbook: redis.yml
-          # Optional, directory where playbooks live
-          directory: ./Redis
-          # Optional, ansible configuration file content (ansible.cfg)
-          configuration: |
-            [defaults]
-            callbacks_enabled = ansible.posix.profile_tasks, ansible.posix.timer
-            stdout_callback = yaml
-            nocows = false
-          # Optional, SSH private key
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          options: 
-            --ssh-extra-args "-o StrictHostKeyChecking=no"
-          inventory: 
-            inventory.yml
+          version: "9.3.0"
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Connect to EC2 and run script
+        run: |
+           ansible-playbook -i inventory.yml redis.yml
