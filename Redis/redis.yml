@@ -3,8 +3,23 @@
   hosts: all
   become: yes
 
+  vars:
+    docker_username: "{{ lookup('env', 'docker_username') }}"
+    docker_password: "{{ lookup('env', 'docker_password') }}"
+
   tasks:
-  
+    - name: Ensure Docker is installed
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Docker login (if using private registry)
+      docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+        registry: "https://index.docker.io/v1/"
+      when: docker_username is defined and docker_password is defined
+
     - name: Pull Rental Anshin Kun Docker image
       docker_image:
         name: jiitakinc/rental-anshin-kun

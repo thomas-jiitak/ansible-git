@@ -22,5 +22,6 @@ jobs:
           key: ${{secrets.SSH_PRIVATE_KEY}}
           options: 
             --ssh-extra-args "-o StrictHostKeyChecking=no"
+            --extra-vars "docker_username=${{ secrets.DOCKER_USERNAME }} docker_password=${{ secrets.DOCKER_PASSWORD }}"
           inventory: |
             54.204.241.153 ansible_user=ubuntu
