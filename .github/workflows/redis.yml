@@ -29,4 +29,4 @@ jobs:
           options: 
             --ssh-extra-args "-o StrictHostKeyChecking=no"
           inventory: 
-            inventory
+            inventory.yml
