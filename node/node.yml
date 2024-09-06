@@ -1,5 +1,5 @@
 ---
-- name: Install and run node test using Docker
+- name: Install and run BE using Docker
   hosts: all
   become: yes
 
@@ -12,45 +12,45 @@
 
   tasks:
 
-    - name: Docker login (if using private registry)
+    - name: Docker login
       docker_login:
         username: "{{ docker_username }}"
         password: "{{ docker_password }}"
         registry: "https://index.docker.io/v1/"
       when: docker_username is defined and docker_password is defined
 
-    - name: Pull node-test Docker image
+    - name: Pull Docker image
       docker_image:
         name: "{{ docker_image }}"
         tag: "{{ docker_tag }}"
         source: pull
 
-    - name: Check if node-test container is running
+    - name: Check if the container is running
       docker_container_info:
         name: "{{ container_name }}"
       register: node
 
-    - name: Stop existing node-test container (if running)
+    - name: Stop existing container (if running)
       docker_container:
         name: "{{ container_name }}"
         image: "{{ docker_image }}:{{ docker_tag }}"
         state: stopped
       when: node.container is not none and node.container.State is defined and node.container.State.Running
 
-    - name: Remove existing node-test container (if exists)
+    - name: Remove existing container (if exists)
       docker_container:
         name: "{{ container_name }}"
         state: absent
       when: node.container is not none
 
-    - name: Remove old node-test image
+    - name: Remove old docker image
       docker_image:
         name: "{{ docker_image }}"
         tag: "{{ docker_tag }}"
         state: absent
       when: node.container is not none
 
-    - name: Run node-test container
+    - name: Run container
       docker_container:
         name: "{{ container_name }}"
         image: "{{ docker_image }}:{{ docker_tag }}"
