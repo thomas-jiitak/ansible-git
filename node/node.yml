@@ -4,6 +4,9 @@
   become: yes
 
   vars:
+    docker_image: "thomasjiitak/node"
+    docker_tag: "latest"
+    container_name: "node-test" 
     docker_username: "{{ lookup('env', 'docker_username') }}"
     docker_password: "{{ lookup('env', 'docker_password') }}"
 
@@ -18,39 +21,39 @@
 
     - name: Pull node-test Docker image
       docker_image:
-        name: thomasjiitak/node
-        tag: latest
+        name: "{{ docker_image }}"
+        tag: "{{ docker_tag }}"
         source: pull
 
     - name: Check if node-test container is running
       docker_container_info:
-        name: node-test
+        name: "{{ docker_image }}"
       register: node
 
     - name: Stop existing node-test container (if running)
       docker_container:
-        name: node-test
-        image: thomasjiitak/node:latest
+        name: "{{ docker_image }}"
+        image: "{{ docker_image }}:{{ docker_tag }}"
         state: stopped
       when: node.container is not none and node.container.State is defined and node.container.State.Running
 
     - name: Remove existing node-test container (if exists)
       docker_container:
-        name: node-test
+        name: "{{ docker_image }}"
         state: absent
       when: node.container is not none
 
     - name: Remove old node-test image
       docker_image:
-        name: thomasjiitak/node
-        tag: latest
+        name: "{{ docker_image }}"
+        tag: "{{ docker_tag }}"
         state: absent
       when: node.container is not none
 
     - name: Run node-test container
       docker_container:
-        name: node-test
-        image: thomasjiitak/node:latest
+        name: "{{ docker_image }}"
+        tag: "{{ docker_tag }}"
         state: started
         restart_policy: always
         ports:
