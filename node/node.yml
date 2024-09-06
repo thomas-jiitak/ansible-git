@@ -9,12 +9,12 @@
 
   tasks:
 
-    # - name: Docker login (if using private registry)
-    #   docker_login:
-    #     username: "{{ docker_username }}"
-    #     password: "{{ docker_password }}"
-    #     registry: "https://index.docker.io/v1/"
-    #   when: docker_username is defined and docker_password is defined
+    - name: Docker login (if using private registry)
+      docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+        registry: "https://index.docker.io/v1/"
+      when: docker_username is defined and docker_password is defined
 
     - name: Pull node-test Docker image
       docker_image:
