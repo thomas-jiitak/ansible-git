@@ -1,0 +1,54 @@
+---
+- name: Install and run node test using Docker
+  hosts: all
+  become: yes
+
+  vars:
+    docker_username: "{{ lookup('env', 'docker_username') }}"
+    docker_password: "{{ lookup('env', 'docker_password') }}"
+
+  tasks:
+
+    # - name: Docker login (if using private registry)
+    #   docker_login:
+    #     username: "{{ docker_username }}"
+    #     password: "{{ docker_password }}"
+    #     registry: "https://index.docker.io/v1/"
+    #   when: docker_username is defined and docker_password is defined
+
+    - name: Pull node-test Docker image
+      docker_image:
+        name: thomasjiitak/node
+        tag: latest
+        source: pull
+
+    - name: Check if node-test container is running
+      docker_container_info:
+        name: node-test
+      register: node
+
+    - name: Debug container information
+      debug:
+        var: node
+
+    - name: Stop existing node-test container (if running)
+      docker_container:
+        name: node-test
+        image: thomasjiitak/node:latest
+        state: stopped
+      when: node.container is not none and node.container.State is defined and node.container.State.Running
+
+    - name: Remove existing node-test container (if exists)
+      docker_container:
+        name: node-test
+        state: absent
+      when: node.container is not none
+
+    - name: Run node-test container
+      docker_container:
+        name: node-test
+        image: thomasjiitak/node:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:3000"

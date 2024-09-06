@@ -24,13 +24,13 @@
 
     - name: Stop existing Rental Anshin Kun container (if running)
       docker_container:
-        name: rental-anshin-kun
+        name: Rental-Dev
         state: stopped
       ignore_errors: yes
 
     - name: Remove existing Rental Anshin Kun container (if exists)
       docker_container:
-        name: rental-anshin-kun
+        name: Rental-Dev
         state: absent
       ignore_errors: yes
 
@@ -41,5 +41,4 @@
         state: started
         restart_policy: always
         ports:
-          - "6379:6379"
-          - "8001:8001"
+          - "80:3000"
