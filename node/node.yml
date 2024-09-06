@@ -27,19 +27,19 @@
 
     - name: Check if node-test container is running
       docker_container_info:
-        name: "{{ docker_image }}"
+        name: "{{ container_name }}"
       register: node
 
     - name: Stop existing node-test container (if running)
       docker_container:
-        name: "{{ docker_image }}"
+        name: "{{ container_name }}"
         image: "{{ docker_image }}:{{ docker_tag }}"
         state: stopped
       when: node.container is not none and node.container.State is defined and node.container.State.Running
 
     - name: Remove existing node-test container (if exists)
       docker_container:
-        name: "{{ docker_image }}"
+        name: "{{ container_name }}"
         state: absent
       when: node.container is not none
 
@@ -52,7 +52,7 @@
 
     - name: Run node-test container
       docker_container:
-        name: "{{ docker_image }}"
+        name: "{{ container_name }}"
         image: "{{ docker_image }}:{{ docker_tag }}"
         state: started
         restart_policy: always
