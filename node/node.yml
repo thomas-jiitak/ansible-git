@@ -27,10 +27,6 @@
         name: node-test
       register: node
 
-    - name: Debug container information
-      debug:
-        var: node
-
     - name: Stop existing node-test container (if running)
       docker_container:
         name: node-test
@@ -41,6 +37,13 @@
     - name: Remove existing node-test container (if exists)
       docker_container:
         name: node-test
+        state: absent
+      when: node.container is not none
+
+    - name: Remove old node-test image
+      docker_image:
+        name: thomasjiitak/node
+        tag: latest
         state: absent
       when: node.container is not none
 
