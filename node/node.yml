@@ -53,7 +53,7 @@
     - name: Run node-test container
       docker_container:
         name: "{{ docker_image }}"
-        tag: "{{ docker_tag }}"
+        image: "{{ docker_image }}:{{ docker_tag }}"
         state: started
         restart_policy: always
         ports:
