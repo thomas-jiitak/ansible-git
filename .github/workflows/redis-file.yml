@@ -29,6 +29,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{env.IMAGE_NAME}}
+          cache-from: type=registry,ref=${{env.IMAGE_NAME}}
+          cache-to: type=inline
 
   deploy-to-ec2:
       needs: build-push-docker
@@ -50,4 +52,4 @@ jobs:
               --ssh-extra-args "-o StrictHostKeyChecking=no"
               --extra-vars "docker_username=${{ secrets.DOCKER_USERNAME }} docker_password=${{ secrets.DOCKER_PASSWORD }}"
             inventory: |
-              52.207.154.219 ansible_user=ubuntu
+              54.205.223.240 ansible_user=ubuntu
