@@ -1,11 +1,12 @@
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 
 // Name of the secret in AWS Secrets Manager
-const secret_name = "terraform/development"; // Adjust this to your secret name
+const secret_name = process.env.SECRET_NAM; // Adjust this to your secret name
+const region = process.env.AWS_REGION;
 
 // Create a Secrets Manager client
 const client = new SecretsManagerClient({
-  region: "us-east-1", // Adjust the region to your AWS region
+  region: region, // Adjust the region to your AWS region
 });
 
 async function getSecret() {
