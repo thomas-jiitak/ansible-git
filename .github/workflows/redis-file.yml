@@ -31,25 +31,25 @@ jobs:
           tags: ${{env.IMAGE_NAME}}
           cache-from: type=registry,ref=${{env.IMAGE_NAME}}
           cache-to: type=inline
-          build-args: 
-            SECRET_NAME: "terraform/development"
-            AWS_REGION: "us-east-1"
-
+          build-args: |
+            SECRET_NAME=${{secrets.SECRET_NAME}}
+            AWS_REGION=${{secrets.AWS_REGION}} 
+            
   deploy-to-ec2:
-      needs: build-push-docker
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+    needs: build-push-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Run playbook
-          uses: dawidd6/action-ansible-playbook@v2
-          with:
-            playbook: node.yml
-            directory: ./node
-            key: ${{secrets.SSH_PRIVATE_KEY}}
-            options: 
-              --ssh-extra-args "-o StrictHostKeyChecking=no"
-              --extra-vars "docker_username=${{ secrets.DOCKER_USERNAME }} docker_password=${{ secrets.DOCKER_PASSWORD }}"
-            inventory: |
-              54.205.223.240 ansible_user=ubuntu
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: node.yml
+          directory: ./node
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          options: |
+            --ssh-extra-args "-o StrictHostKeyChecking=no"
+            --extra-vars "docker_username=${{ secrets.DOCKER_USERNAME }} docker_password=${{ secrets.DOCKER_PASSWORD }}"
+          inventory: |
+            54.205.223.240 ansible_user=ubuntu

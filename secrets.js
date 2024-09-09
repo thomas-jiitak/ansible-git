@@ -1,7 +1,7 @@
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
 
 // Name of the secret in AWS Secrets Manager
-const secret_name = process.env.SECRET_NAM; // Adjust this to your secret name
+const secret_name = process.env.SECRET_NAME; // Adjust this to your secret name
 const region = process.env.AWS_REGION;
 
 // Create a Secrets Manager client
