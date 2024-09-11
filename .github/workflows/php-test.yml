@@ -1,0 +1,43 @@
+name: Deploy to EC2
+
+on:
+    push:
+        branches:
+            - test
+    pull_request:
+        branches:
+            - test
+
+jobs:
+    build:
+        name: Run on EC2
+        runs-on: ubuntu-latest
+        #environment: development
+
+        steps:
+            - name: Set up SSH
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            - name: Connect to EC2 and Pull
+              run: |
+                ssh -o StrictHostKeyChecking=no ubuntu@54.205.223.240 << 'EOF'
+                # Run your shell commands
+                cd /home/ubuntu/ansible-git
+                ls
+                git branch
+                git pull origin test
+                EOF
+
+            # Run this step only if 'migrate' is in the commit message
+            - name: Perfrom Artisan Migrate
+              if: contains(github.event.head_commit.message, 'migrate')
+              run: |
+                ssh -o StrictHostKeyChecking=no ubuntu@54.205.223.240 << 'EOF'
+                cd /home/ubuntu/ansible-git
+                ls
+                sudo composer install
+                sudo php artisan migrate
+                sudo php artisan route:clear
+                EOF
