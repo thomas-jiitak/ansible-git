@@ -35,7 +35,7 @@ jobs:
               if: contains(github.event.head_commit.message, 'migrate')
               run: |
                 ssh -o StrictHostKeyChecking=no ubuntu@54.205.223.240 << 'EOF'
-                cd /home/ubuntu/ansible-git
+                pwd
                 ls
                 sudo composer install
                 sudo php artisan migrate
