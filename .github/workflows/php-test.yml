@@ -31,7 +31,7 @@ jobs:
                 EOF
 
             # Run this step only if 'migrate' is in the commit message
-            - name: Perfrom Artisan Migrate
+            - name: Perfrom Artisan Migrate 
               if: contains(github.event.head_commit.message, 'migrate')
               run: |
                 ssh -o StrictHostKeyChecking=no ubuntu@54.205.223.240 << 'EOF'
