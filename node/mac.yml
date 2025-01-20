@@ -1,6 +1,6 @@
 ---
 - name: Deploy Docker Application
-  hosts: mac-studio
+  hosts: all
   tasks:
     - name: Pull the new Docker image
       shell: |
