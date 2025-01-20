@@ -45,11 +45,11 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: node.yml
+          playbook: mac.yml
           directory: ./node
           key: ${{secrets.SSH_PRIVATE_KEY}}
           options: |
             --ssh-extra-args "-o StrictHostKeyChecking=no"
             --extra-vars "docker_username=${{ secrets.DOCKER_USERNAME }} docker_password=${{ secrets.DOCKER_PASSWORD }}"
           inventory: |
-            54.205.223.240 ansible_user=ubuntu
+            192.168.31.171 ansible_user=devops

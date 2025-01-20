@@ -1,0 +1,35 @@
+---
+- name: Deploy Docker Application
+  hosts: mac-studio
+  tasks:
+    - name: Pull the new Docker image
+      shell: |
+        NEW_TAG={{ new_tag }}
+        docker pull your-repo/your-app:${{ NEW_TAG }}
+      register: image_pull_result
+
+    - name: Update Docker Compose with new image tag
+      shell: |
+        sed -i "s/your-repo\/your-app:.*/your-repo\/your-app:${{ NEW_TAG }}/" /path/to/docker-compose.yml
+
+    - name: Deploy the updated Docker containers
+      shell: |
+        docker-compose -f /path/to/docker-compose.yml up -d --remove-orphans
+      when: image_pull_result is success
+
+    - name: Perform Health Check
+      shell: |
+        sleep 10  # Wait for containers to stabilize
+        curl -s -o /dev/null -w "%{http_code}" http://localhost/health
+      register: health_check_result
+      retries: 5
+      delay: 10
+      until: health_check_result.stdout == "200"
+
+    - name: Rollback if health check fails
+      shell: |
+        echo "Rolling back to previous version..."
+        PREVIOUS_TAG={{ previous_tag }}
+        sed -i "s/your-repo\/your-app:.*/your-repo\/your-app:${{ PREVIOUS_TAG }}/" /path/to/docker-compose.yml
+        docker-compose -f /path/to/docker-compose.yml up -d --remove-orphans
+      when: health_check_result.failed
