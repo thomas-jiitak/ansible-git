@@ -1,7 +1,7 @@
 name: Docker Image CI-CD dev
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "mac" ]
 env:
   IMAGE_NAME: thomasjiitak/node:latest
 jobs:
